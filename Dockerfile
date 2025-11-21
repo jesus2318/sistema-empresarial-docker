@@ -1,12 +1,16 @@
-# Imagen base con Tomcat 10.1 y Java 17 (compatible con Jakarta EE 10 / Servlet 6)
-FROM tomcat:10.1-jdk17
+# Imagen base con Tomcat 9 y Java 11
+FROM tomcat:9.0-jdk11
 
-# Borrar apps de ejemplo de Tomcat para que no estorben
+# Borrar apps de ejemplo
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copiar tu WAR a la carpeta de despliegue de Tomcat
-# Quedará disponible como /SistemaEmpresarial
-COPY SistemaEmpresarial.war /usr/local/tomcat/webapps/SistemaEmpresarial.war
+# Instalar curl para descargar el WAR desde GitHub
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Descargar el WAR desde el Release de GitHub
+# 👇 Sustituye la URL por la que copiaste del release
+RUN curl -L -o /usr/local/tomcat/webapps/SistemaEmpresarial.war \
+    "https://github.com/jesus2318/sistema-empresarial-docker/releases/download/v1/SistemaEmpresarial.war"
 
 # Copiar el driver JDBC de SQL Server al classpath de Tomcat
 COPY lib/mssql-jdbc-*.jar /usr/local/tomcat/lib/
@@ -16,3 +20,5 @@ EXPOSE 8080
 
 # Comando de inicio
 CMD ["catalina.sh", "run"]
+
+
