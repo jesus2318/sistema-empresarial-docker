@@ -19,3 +19,4 @@ EXPOSE 8080
 
 # Comando de inicio
 CMD ["catalina.sh", "run"]
+
